@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Claude Олега</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:ital,wght@0,300;0,400;1,300&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Layout: ночная обложка → бумажные разделы для чтения → ночной финал. Одна колонка до 1040px, сетки карточек сворачиваются в столбец. */
+:root{
+  --night:#0a0f1e; --midnight:#121a2b; --indigo:#1b2540; --indigo-2:#243052;
+  --cream:#ede7dc; --cream-soft:#c9c3b8; --mist:#9ea3b3;
+  --paper:#f4efe6; --paper-card:#fbf8f2; --slate:#5e6475;
+  --apricot:#e0a47a; --lavender:#afa2f0; --sage:#8fcba8; --gold:#e9c46a; --clay:#b66a3e;
+  --line:rgba(18,26,43,.13); --line-strong:rgba(18,26,43,.25); --line-night:rgba(237,231,220,.14);
+  --f-display:"Noto Serif Display","Times New Roman",Georgia,serif;
+  --f-body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r-md:18px; --r-lg:28px; --r-pill:99px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--midnight);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+section{padding-block:clamp(56px,9vw,104px)}
+.label{font-size:11.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--slate)}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;letter-spacing:-.015em;line-height:1.06;margin:0;text-wrap:balance}
+h2{font-size:clamp(34px,5.4vw,56px);max-width:18ch}
+h2 em,h1 em{font-style:italic;font-weight:300}
+h2 em{color:var(--clay)}
+h3{font-size:22px;line-height:1.18}
+.lead{font-size:18.5px;color:var(--slate);max-width:52ch;margin:0}
+.head{display:grid;gap:18px;margin-bottom:clamp(32px,5vw,52px)}
+.mono{font-family:var(--f-mono);font-size:13px}
+.card{background:var(--paper-card);border:1px solid var(--line);border-radius:var(--r-md);padding:26px;min-width:0}
+
+/* Night */
+.night{background:var(--midnight);color:var(--cream);position:relative;overflow:hidden}
+.night .label{color:var(--mist)}
+.night .lead{color:var(--cream-soft)}
+.sky{position:absolute;inset:0;pointer-events:none;background-image:
+  radial-gradient(1.5px 1.5px at 12% 22%,rgba(237,231,220,.8) 50%,transparent 51%),
+  radial-gradient(1px 1px at 28% 68%,rgba(237,231,220,.5) 50%,transparent 51%),
+  radial-gradient(1px 1px at 46% 14%,rgba(237,231,220,.45) 50%,transparent 51%),
+  radial-gradient(1.5px 1.5px at 64% 82%,rgba(237,231,220,.7) 50%,transparent 51%),
+  radial-gradient(1px 1px at 78% 30%,rgba(237,231,220,.5) 50%,transparent 51%),
+  radial-gradient(1px 1px at 90% 60%,rgba(237,231,220,.4) 50%,transparent 51%),
+  radial-gradient(1px 1px at 6% 86%,rgba(237,231,220,.4) 50%,transparent 51%),
+  radial-gradient(1.5px 1.5px at 54% 48%,rgba(237,231,220,.35) 50%,transparent 51%)}
+.planet{position:absolute;width:clamp(180px,30vw,340px);aspect-ratio:1;max-width:100%;border-radius:50%;right:-60px;top:40px;
+  background:radial-gradient(circle at 34% 30%,#f0c4a2 0%,var(--apricot) 42%,#9c6542 100%);
+  box-shadow:inset -28px -22px 60px rgba(10,15,30,.55),0 0 90px -20px rgba(224,164,122,.6);opacity:.9}
+.orbit{position:absolute;right:-150px;top:120px;width:clamp(360px,56vw,620px);aspect-ratio:2.6;border:1px solid var(--line-night);border-radius:50%;transform:rotate(-14deg)}
+.cover{padding-block:clamp(72px,12vw,140px) clamp(56px,9vw,96px)}
+.cover .wrap{position:relative;display:grid;gap:24px}
+.cover h1{font-size:clamp(42px,8vw,86px);font-weight:300;letter-spacing:-.025em;max-width:11ch}
+.cover h1 em{color:var(--apricot)}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.chip{border:1px solid rgba(237,231,220,.28);border-radius:var(--r-pill);padding:8px 16px;font-size:14.5px;color:var(--cream)}
+.chip b{color:var(--gold);font-weight:600}
+
+/* Flow: как Claude отвечает */
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:14px;align-items:stretch}
+.flow .arrow{align-self:center;font-family:var(--f-display);font-size:30px;color:var(--clay)}
+.flow .card{display:grid;gap:10px;align-content:start}
+.flow .card.result{background:var(--midnight);color:var(--cream);border-color:var(--midnight)}
+.flow .card.result p{color:var(--cream-soft)}
+.flow p{margin:0;font-size:15px;color:var(--slate)}
+.path{display:inline-block;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:2px 8px;font-family:var(--f-mono);font-size:12.5px;color:var(--midnight);word-break:break-all}
+.result .path{background:var(--indigo);border-color:var(--line-night);color:var(--cream)}
+.note{margin-top:22px;display:flex;gap:12px;align-items:flex-start;border:1px solid var(--clay);border-radius:var(--r-md);padding:18px 22px;background:var(--paper-card);font-size:15.5px}
+.note .star{flex:none;width:18px;height:18px;margin-top:3px}
+
+/* Карта проектов */
+.group{display:grid;gap:14px;margin-top:34px}
+.group-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-pill);padding:6px 14px;font-size:13px;font-weight:600;color:var(--midnight)}
+.tag.ff{background:var(--apricot)} .tag.pak{background:var(--lavender)} .tag.all{background:var(--sage)}
+.group-head span{font-size:15px;color:var(--slate)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.proj{display:grid;gap:12px;align-content:start}
+.proj .folder{font-family:var(--f-mono);font-size:12.5px;color:var(--slate)}
+.proj p{margin:0;font-size:15px;color:var(--slate)}
+.proj .put{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px}
+.proj .put .label{font-size:10.5px}
+.proj ul{margin:0;padding:0;list-style:none;display:grid;gap:4px;font-size:15px}
+.proj li{display:flex;gap:8px}
+.proj li::before{content:"→";color:var(--clay);flex:none}
+.rule{margin-top:26px;font-size:15.5px;color:var(--slate);max-width:62ch}
+.rule b{color:var(--midnight)}
+
+/* Дерево */
+.tree{background:var(--midnight);color:var(--cream);border-radius:var(--r-lg);padding:28px;overflow-x:auto}
+.tree pre{margin:0;font-family:var(--f-mono);font-size:13.5px;line-height:1.75;white-space:pre}
+.tree .c{color:var(--mist)} .tree .a{color:var(--apricot)} .tree .l{color:var(--lavender)} .tree .s{color:var(--sage)} .tree .g{color:var(--gold)}
+.twocol{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:start}
+.twocol > *{min-width:0}
+.legend{display:grid;gap:16px}
+.legend div{display:grid;gap:4px}
+.legend b{font-family:var(--f-mono);font-weight:400;font-size:13.5px}
+.legend span{font-size:15px;color:var(--slate)}
+
+/* Шаги */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:s}
+.step{display:grid;gap:10px;align-content:start}
+.step .num{font-family:var(--f-display);font-style:italic;font-weight:300;font-size:30px;line-height:1;color:var(--clay)}
+.step p{margin:0;font-size:15px;color:var(--slate)}
+.export{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:14px}
+.export .card{padding:20px 22px;display:grid;gap:6px}
+.export b{font-weight:600}
+.export span{font-size:14.5px;color:var(--slate)}
+.export .mono{color:var(--midnight)}
+
+/* Можно / нельзя */
+.dodont{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dodont .card{display:grid;gap:14px;align-content:start}
+.dodont ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:15.5px}
+.dodont li{display:flex;gap:12px;align-items:flex-start}
+.ic{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;margin-top:2px}
+.ic.yes{background:var(--sage);color:var(--midnight)}
+.ic.no{border:1.5px solid var(--clay);color:var(--clay)}
+.dodont .card.stop{border-color:var(--clay)}
+
+/* День */
+.day{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.day::before{content:"";position:absolute;left:12.5%;right:12.5%;top:21px;height:1px;background:var(--gold);opacity:.7}
+.moment{display:grid;justify-items:center;text-align:center;gap:12px;padding:0 10px;position:relative}
+.dot{width:42px;height:42px;border-radius:50%;background:var(--indigo);border:1px solid var(--gold);display:grid;place-items:center;font-family:var(--f-display);font-style:italic;color:var(--gold);font-size:18px;box-shadow:0 0 40px -10px rgba(233,196,106,.7)}
+.moment h3{font-size:20px}
+.moment p{margin:0;font-size:15px;color:var(--cream-soft);max-width:24ch}
+
+/* Команды */
+.cmds{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cmd{display:grid;gap:12px;align-content:start}
+.say{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:8px 8px 8px 16px}
+.say code{font-family:var(--f-mono);font-size:13.5px;min-width:0;overflow-wrap:anywhere}
+.copy{flex:none;border:0;background:var(--midnight);color:var(--cream);border-radius:var(--r-pill);padding:6px 12px;font:600 12.5px var(--f-body);cursor:pointer}
+.copy:focus-visible{outline:2px solid var(--midnight);outline-offset:3px}
+.cmd p{margin:0;font-size:15px;color:var(--slate)}
+
+/* Неделя */
+.week{display:grid;gap:10px;max-width:760px}
+.week label{display:flex;gap:14px;align-items:flex-start;background:var(--indigo);border:1px solid var(--line-night);border-radius:var(--r-md);padding:18px 20px;cursor:pointer}
+.week input{flex:none;width:20px;height:20px;margin-top:3px;accent-color:var(--gold)}
+.week input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.week b{font-weight:600;color:var(--cream)}
+.week span{display:block;font-size:15px;color:var(--cream-soft)}
+.week input:checked + div{opacity:.55}
+.foot{margin-top:40px;font-size:14px;color:var(--mist)}
+
+@media (max-width:860px){
+  .flow{grid-template-columns:1fr}
+  .flow .arrow{justify-self:center;transform:rotate(90deg)}
+  .twocol,.dodont{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .cmds{grid-template-columns:1fr}
+  .day{grid-template-columns:1fr 1fr;row-gap:32px}
+  .day::before{display:none}
+}
+@media (max-width:480px){
+  .steps,.day{grid-template-columns:1fr}
+  .card{padding:22px}
+  .planet{opacity:.45}
+}
+@media (prefers-reduced-motion:no-preference){
+  .planet{animation:float 9s cubic-bezier(.65,0,.35,1) infinite alternate}
+  @keyframes float{to{transform:translateY(14px)}}
+}
+</style>
+</head>
+<body>
+
+
+<header class="night cover">
+  <div class="sky"></div>
+  <div class="orbit"></div>
+  <div class="planet"></div>
+  <div class="wrap">
+    <div class="label">Путеводитель · Лобов ФФ и Лобов Пак</div>
+    <h1>Как устроен ваш <em>Claude</em></h1>
+    <p class="lead">Что где лежит, куда класть файлы и как работать каждый день, чтобы ответы были точными, а не общими.</p>
+    <div class="facts">
+      <span class="chip"><b>8</b> проектов по темам</span>
+      <span class="chip">Файлы → папка <b>data</b></span>
+      <span class="chip">Ничего без вашего <b>«ок»</b></span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Как это работает</div>
+      <h2>Две инструкции в <em>каждом</em> чате</h2>
+      <p class="lead">Claude уже знает вас, обе компании, команду, клиентов и цели. Проект добавляет к этому свою тему.</p>
+    </div>
+    <div class="flow">
+      <div class="card">
+        <div class="label">Всегда</div>
+        <h3>Общий контекст</h3>
+        <p>Кто вы, цели, правила, стиль, справочник о бизнесе.</p>
+        <span class="path">~/.claude/CLAUDE.md</span>
+      </div>
+      <div class="arrow" aria-hidden="true">+</div>
+      <div class="card">
+        <div class="label">В выбранном проекте</div>
+        <h3>Инструкция темы</h3>
+        <p>Задачи этой темы, её таблицы, открытые вопросы.</p>
+        <span class="path">ff-finansy/CLAUDE.md</span>
+      </div>
+      <div class="arrow" aria-hidden="true">=</div>
+      <div class="card result">
+        <div class="label">Результат</div>
+        <h3>Claude сразу в теме</h3>
+        <p>Не нужно объяснять заново, что за таблица и зачем.</p>
+        <span class="path">+ ваши файлы из data/</span>
+      </div>
+    </div>
+    <div class="note">
+      <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0l2.4 9.6L24 12l-9.6 2.4L12 24l-2.4-9.6L0 12l9.6-2.4z" fill="#b66a3e"/></svg>
+      <div>Поэтому главное правило одно: <b>открывайте чат в нужном проекте.</b> Вопрос по деньгам задавайте в финансах, по менеджеру — в продажах.</div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--paper-card);border-block:1px solid var(--line)">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Карта проектов</div>
+      <h2>Что где делать и что <em>положить</em></h2>
+      <p class="lead">Каждый проект — отдельная тема. Под каждым список файлов, которые стоит загрузить в его папку data.</p>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><span class="tag ff">Лобов ФФ</span><span>5 проектов</span></div>
+      <div class="grid">
+        <article class="card proj">
+          <div class="folder">ff-pokazateli</div>
+          <h3>Отгрузки и показатели</h3>
+          <p>Цены в плановой таблице, ГПР считается сама, сводка к цели 3 млн.</p>
+          <div class="put"><div class="label">Положить</div><ul><li>Плановая таблица отгрузок</li><li>ГПР</li></ul></div>
+        </article>
+        <article class="card proj">
+          <div class="folder">ff-klienty</div>
+          <h3>Текущие клиенты</h3>
+          <p>Кто платит и отгружается в норме, кто в зоне риска и что у него спросить.</p>
+          <div class="put"><div class="label">Положить</div><ul><li>Таблица ядра клиентов</li><li>Выгрузки чатов с клиентами</li></ul></div>
+        </article>
+        <article class="card proj">
+          <div class="folder">ff-finansy</div>
+          <h3>Цифры и финансы</h3>
+          <p>Разнесение платёжек и чеков, платёжный календарь, что платить первым.</p>
+          <div class="put"><div class="label">Положить</div><ul><li>ДДС, оплаты, выплаты сотрудникам</li><li>Личные расходы, логисты</li><li>Платёжки и чеки</li><li>Обязательные платежи с датами</li></ul></div>
+        </article>
+        <article class="card proj">
+          <div class="folder">ff-prodazhi</div>
+          <h3>Маркетинг, продажи, КП</h3>
+          <p>Работает как руководитель отдела продаж: расчёты, amoCRM, план-факт.</p>
+          <div class="put"><div class="label">Положить</div><ul><li>Прайс и клиентские цены</li><li>Расчёты, конверсии, план-факт</li><li>Выгрузка amoCRM</li><li>2–3 удачных КП как образец</li></ul></div>
+        </article>
+        <article class="card proj">
+          <div class="folder">ff-naym</div>
+          <h3>Найм и структура</h3>
+          <p>Разбор откликов, отчёт «план найма на завтра», обратная связь от новичков.</p>
+          <div class="put"><div class="label">Положить</div><ul><li>Таблица кандидатов</li><li>Вакансии и требования</li></ul></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><span class="tag pak">Лобов Пак</span><span>2 проекта</span></div>
+      <div class="grid">
+        <article class="card proj">
+          <div class="folder">pak-prodazhi-crm</div>
+          <h3>Клиенты, маркетинг, CRM</h3>
+          <p>Кому написать сегодня, ответы на Авито, поиск B2B-клиентов с крупным чеком.</p>
+          <div class="put"><div class="label">Положить</div><ul><li>Таблица Пак: лиды, сделки, цифры</li><li>Переписки и объявления Авито</li></ul></div>
+        </article>
+        <article class="card proj">
+          <div class="folder">pak-kp</div>
+          <h3>КП и сметы</h3>
+          <p>Внутренний прайс: закупка + налоги + наценка. Быстрые КП.</p>
+          <div class="put"><div class="label">Положить</div><ul><li>Таблица подрядчиков</li><li>Цены конкурентов, если есть</li></ul></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><span class="tag all">Оба направления</span><span>1 проект</span></div>
+      <div class="grid">
+        <article class="card proj">
+          <div class="folder">zadachi</div>
+          <h3>Задачи ваши и команды</h3>
+          <p>Единый список: ответственный, дедлайн, 2–3 главные задачи дня.</p>
+          <div class="put"><div class="label">Положить</div><ul><li>Ничего — задачи диктуете в чат</li></ul></div>
+        </article>
+      </div>
+    </div>
+
+    <p class="rule"><b>Каждую таблицу — один раз,</b> в проект, который её ведёт. Остальные проекты прочитают её оттуда, копии не нужны.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap twocol">
+    <div class="tree" aria-label="Структура папок на сервере">
+<pre><span class="c">/home/claude/</span>
+├── .claude/
+│   ├── CLAUDE.md        <span class="c">общая инструкция</span>
+│   └── context/         <span class="c">справочник о бизнесе</span>
+├── <span class="a">ff-pokazateli/</span>
+├── <span class="a">ff-klienty/</span>
+├── <span class="a">ff-finansy/</span>
+├── <span class="a">ff-prodazhi/</span>
+├── <span class="a">ff-naym/</span>
+├── <span class="l">pak-prodazhi-crm/</span>
+├── <span class="l">pak-kp/</span>
+└── <span class="s">zadachi/</span>
+    ├── CLAUDE.md        <span class="c">инструкция темы</span>
+    ├── <span class="g">data/</span>            <span class="c">ваши файлы</span>
+    └── tables.md        <span class="c">появится сам</span></pre>
+    </div>
+    <div>
+      <div class="head" style="margin-bottom:28px">
+        <div class="label">На сервере</div>
+        <h2>Где что <em>лежит</em></h2>
+      </div>
+      <div class="legend">
+        <div><b>CLAUDE.md</b><span>Инструкция. Руками не правьте — скажите «дополни инструкцию».</span></div>
+        <div><b>data/</b><span>Сюда загружаете таблицы, выгрузки, скрины.</span></div>
+        <div><b>tables.md</b><span>Claude сам запишет структуру ваших таблиц, чтобы не разбираться заново.</span></div>
+        <div><b>context/</b><span>Услуги, клиенты, команда, процессы, стиль, термины. Обновляется командой «обнови контекст».</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--paper-card);border-block:1px solid var(--line)">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Загрузка файла</div>
+      <h2>Четыре шага в <em>CloudCLI</em></h2>
+    </div>
+    <div class="steps">
+      <div class="card step"><div class="num">01</div><h3>Выгрузите</h3><p>Таблицу, чат или отчёт — как показано ниже.</p></div>
+      <div class="card step"><div class="num">02</div><h3>Откройте Files</h3><p>Вкладка Files вверху, затем папка нужного проекта.</p></div>
+      <div class="card step"><div class="num">03</div><h3>Зайдите в data</h3><p>Внутри проекта папка <span class="path">data</span>.</p></div>
+      <div class="card step"><div class="num">04</div><h3>Загрузите</h3><p>Кнопка со стрелкой вверх. Старую версию файла удалите.</p></div>
+    </div>
+    <div class="export">
+      <div class="card"><b>Google Таблица</b><span class="mono">Файл → Скачать → .xlsx</span><span>Всю таблицу, со всеми листами.</span></div>
+      <div class="card"><b>Чат Telegram</b><span class="mono">⋮ → Экспорт истории → JSON</span><span>Только в Telegram Desktop.</span></div>
+      <div class="card"><b>amoCRM</b><span class="mono">Сделки → ⋯ → Экспорт</span><span>Формат Excel.</span></div>
+      <div class="card"><b>Платёжки и чеки</b><span class="mono">скрин или PDF</span><span>Как есть, без обработки.</span></div>
+    </div>
+    <p class="rule">Называйте файлы с датой: <span class="path">ДДС_2026-10.xlsx</span>. Когда подключим Google Таблицы напрямую, выгружать руками не придётся.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Правила</div>
+      <h2>Что Claude делает <em>сам</em>, а что после «ок»</h2>
+    </div>
+    <div class="dodont">
+      <div class="card">
+        <h3>Сам, без вопросов</h3>
+        <ul>
+          <li><span class="ic yes">✓</span>Черновики текстов и КП</li>
+          <li><span class="ic yes">✓</span>Анализ таблиц и проверка формул</li>
+          <li><span class="ic yes">✓</span>Расчёты, планы, сводки</li>
+        </ul>
+        <h3 style="margin-top:8px">Только после вашего «ок»</h3>
+        <ul>
+          <li><span class="ic yes">✓</span>Изменения в таблицах и файлах</li>
+          <li><span class="ic yes">✓</span>Сообщения клиентам и команде</li>
+          <li><span class="ic yes">✓</span>Всё, что касается денег</li>
+          <li><span class="ic yes">✓</span>Удаление</li>
+        </ul>
+      </div>
+      <div class="card stop">
+        <h3>Никогда не загружайте</h3>
+        <ul>
+          <li><span class="ic no">✕</span>Пароли, логины, коды</li>
+          <li><span class="ic no">✕</span>Токены и ключи доступа</li>
+          <li><span class="ic no">✕</span>Номера карт и счетов</li>
+          <li><span class="ic no">✕</span>Паспортные данные</li>
+        </ul>
+        <p style="margin:0;font-size:15px;color:var(--slate)">Если такое есть в таблице, удалите эти столбцы перед выгрузкой.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="night">
+  <div class="sky"></div>
+  <div class="wrap" style="position:relative">
+    <div class="head">
+      <div class="label">Каждый день</div>
+      <h2 style="color:var(--cream)">Рабочий <em style="color:var(--apricot)">ритм</em></h2>
+    </div>
+    <div class="day">
+      <div class="moment"><div class="dot">1</div><h3>Утро</h3><p>Проект zadachi: «что главное сегодня?» — 2–3 задачи.</p></div>
+      <div class="moment"><div class="dot">2</div><h3>Работа</h3><p>Нужная тема → её проект → New Session. Голосом или текстом.</p></div>
+      <div class="moment"><div class="dot">3</div><h3>Проверка</h3><p>Claude показывает правки. Вы отвечаете «ок» или поправляете.</p></div>
+      <div class="moment"><div class="dot">4</div><h3>Мысль не по теме</h3><p>Скажите её в zadachi — она станет задачей, а не отвлечением.</p></div>
+    </div>
+    <p class="lead" style="margin-top:40px;max-width:60ch">Claude отвечает, когда вы ему пишете. Первым он не пишет, поэтому план дня и просроченные задачи спрашивайте сами: откройте zadachi утром.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Три фразы</div>
+      <h2>Как <em>дополнять</em> и проверять</h2>
+      <p class="lead">Инструкции растут вместе с бизнесом. Claude спросит, что изменилось, покажет «было → стало» и внесёт после «ок».</p>
+    </div>
+    <div class="cmds">
+      <div class="card cmd">
+        <div class="say"><code>дополни инструкцию</code><button class="copy" type="button" id="c1">Копировать</button></div>
+        <p>В любом проекте. Новый столбец, правило, клиент или решение по этой теме.</p>
+      </div>
+      <div class="card cmd">
+        <div class="say"><code>обнови контекст</code><button class="copy" type="button" id="c2">Копировать</button></div>
+        <p>Когда меняется общее: команда, цены, цели, новые услуги.</p>
+      </div>
+      <div class="card cmd">
+        <div class="say"><code>какие у тебя открытые вопросы?</code><button class="copy" type="button" id="c3">Копировать</button></div>
+        <p>Claude перечислит, чего ему не хватает. Ответы делают расчёты точнее.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="night" style="background:var(--night)">
+  <div class="sky"></div>
+  <div class="wrap" style="position:relative">
+    <div class="head">
+      <div class="label">Первая неделя</div>
+      <h2 style="color:var(--cream)">С чего <em style="color:var(--apricot)">начать</em></h2>
+    </div>
+    <div class="week">
+      <label for="w1"><input type="checkbox" id="w1"><div><b>Загрузить пять главных таблиц</b><span>Плановая → ff-pokazateli, ДДС → ff-finansy, прайс и план-факт → ff-prodazhi, таблица Пак → pak-prodazhi-crm.</span></div></label>
+      <label for="w2"><input type="checkbox" id="w2"><div><b>Ответить на открытые вопросы</b><span>В каждом проекте: «какие у тебя открытые вопросы?». Главные — пороги проблем, наценка Пак, план найма, книга продаж.</span></div></label>
+      <label for="w3"><input type="checkbox" id="w3"><div><b>Дать по одной задаче в каждый проект</b><span>«Проверь формулы в ГПР», «покажи дебиторку», «проверь расчёты менеджера за неделю».</span></div></label>
+      <label for="w4"><input type="checkbox" id="w4"><div><b>Начать день с zadachi</b><span>Хотя бы пять рабочих дней подряд.</span></div></label>
+    </div>
+    <p class="foot">Отметки сохраняются только в вашем браузере.</p>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=b.previousElementSibling.textContent;
+    var done=function(){b.textContent='Скопировано';setTimeout(function(){b.textContent='Копировать'},1600)};
+    try{navigator.clipboard.writeText(t).then(done,function(){sel(b.previousElementSibling)})}catch(e){sel(b.previousElementSibling)}
+  });
+});
+function sel(el){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r)}
+document.querySelectorAll('.week input').forEach(function(i){
+  try{i.checked=localStorage.getItem('nv-week-'+i.id)==='1'}catch(e){}
+  i.addEventListener('change',function(){try{localStorage.setItem('nv-week-'+i.id,i.checked?'1':'0')}catch(e){}});
+});
+</script>
+
+</body>
+</html>
